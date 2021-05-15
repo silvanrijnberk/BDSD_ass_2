@@ -113,9 +113,6 @@ public class Classifier {
     }
 
     public void Classify(String path, String language) {
-
-        Set<String> com = new HashSet<String>();
-        ;
         Map<String, Integer> frequence = calcFrequencies(read(path));
         Integer combination_counter = frequence.get("combination_counter");
         frequence.remove("combination_counter");
@@ -132,7 +129,7 @@ public class Classifier {
         HashMap<String, Float> temp = new LinkedHashMap<String, Float>();
         for (Map.Entry<String, Integer> aa : list) {
             Float freq = ((float) aa.getValue()) / ((float) combination_counter);
-            if (freq > 0.003) {
+            if (freq > 0.002) {
                 temp.put(aa.getKey(), freq);
             }
         }
