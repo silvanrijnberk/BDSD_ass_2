@@ -125,11 +125,17 @@ public class Classifier {
                 return (o1.getValue()).compareTo(o2.getValue());
             }
         });
-
+        Float sum = (float)0;
         HashMap<String, Float> temp = new LinkedHashMap<String, Float>();
         for (Map.Entry<String, Integer> aa : list) {
             Float freq = ((float) aa.getValue()) / ((float) combination_counter);
-            if (freq > 0.002) {
+            sum += freq;
+        }
+        Float avg = sum/list.size();
+        for (Map.Entry<String, Integer> aa : list) {
+            Float freq = ((float) aa.getValue()) / ((float) combination_counter);
+            sum += freq;
+            if (freq > avg) {
                 temp.put(aa.getKey(), freq);
             }
         }
