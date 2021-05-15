@@ -87,7 +87,7 @@ public class Classifier {
                     if(Math.abs(nl - en) > Math.abs(nl_freg - en_freq)){
                         if(nl > en ){
                             nl_counter++;
-                            System.out.println("en with: " + sentence);
+                            System.out.println("nl with: " + sentence);
                         }else{
                             en_counter++;
                             System.out.println("en with: " + sentence);
@@ -95,7 +95,7 @@ public class Classifier {
                     }else{
                         if(nl_freg > en_freq ){
                             nl_counter++;
-                            System.out.println("en with: " + sentence);
+                            System.out.println("nl with: " + sentence);
                         }
                         else{
                             en_counter++;
