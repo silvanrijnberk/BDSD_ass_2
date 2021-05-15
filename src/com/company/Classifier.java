@@ -76,30 +76,30 @@ public class Classifier {
             }
             if (nl > en && nl_freg > en_freq) {
                 nl_counter++;
-                System.out.println("nl: "+nl_freg+ " en: "+en_freq +" nl with: "+sentence);
+                System.out.println("nl with: "+sentence);
             } else {
                 if (nl < en && nl_freg < en_freq) {
                     en_counter++;
-                    System.out.println("nl: " + nl_freg + " en: " + en_freq + " en with: " + sentence);
+                    System.out.println("en with: " + sentence);
                 }else{
                     nl = nl * 100;
                     en = en * 100;
                     if(Math.abs(nl - en) > Math.abs(nl_freg - en_freq)){
                         if(nl > en ){
                             nl_counter++;
-                            System.out.println("nl: " + nl_freg + " en: " + en_freq + " en with: " + sentence);
+                            System.out.println("en with: " + sentence);
                         }else{
                             en_counter++;
-                            System.out.println("nl: " + nl_freg + " en: " + en_freq + " en with: " + sentence);
+                            System.out.println("en with: " + sentence);
                         }
                     }else{
                         if(nl_freg > en_freq ){
                             nl_counter++;
-                            System.out.println("nl: " + nl_freg + " en: " + en_freq + " en with: " + sentence);
+                            System.out.println("en with: " + sentence);
                         }
                         else{
                             en_counter++;
-                            System.out.println("nl: " + nl_freg + " en: " + en_freq + " en with: " + sentence);
+                            System.out.println("en with: " + sentence);
                         }
                     }
 
@@ -119,11 +119,9 @@ public class Classifier {
         Map<String, Integer> frequence = calcFrequencies(read(path));
         Integer combination_counter = frequence.get("combination_counter");
         frequence.remove("combination_counter");
-        // Create a list from elements of HashMap
         List<Map.Entry<String, Integer>> list =
                 new LinkedList<Map.Entry<String, Integer>>(frequence.entrySet());
 
-        // Sort the list
         Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
             public int compare(Map.Entry<String, Integer> o1,
                                Map.Entry<String, Integer> o2) {
@@ -131,7 +129,6 @@ public class Classifier {
             }
         });
 
-        // put data from sorted list to hashmap
         HashMap<String, Float> temp = new LinkedHashMap<String, Float>();
         for (Map.Entry<String, Integer> aa : list) {
             Float freq = ((float) aa.getValue()) / ((float) combination_counter);
