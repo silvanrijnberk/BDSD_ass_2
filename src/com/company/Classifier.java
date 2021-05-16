@@ -43,17 +43,16 @@ public class Classifier {
         for (String sentence : sentences) {
             float nl = (float) 0;
             float en = (float) 0;
-            Integer nl_freg =  0;
-            Integer en_freq =  0;
-            sentence = sentence.replaceAll("[^a-zA-Z ]", "");
+            Integer nl_freg = 0;
+            Integer en_freq = 0;
+            sentence = sentence.replaceAll("[^a-zA-Z ’]", "");
             String[] words = sentence.split(" ");
             for (String word : words) {
                 Character prev = null;
+                word = " "+word+" ";
                 Character current;
                 String combination;
-                Pattern p = Pattern.compile("[^A-Za-z]");
-                Matcher m = p.matcher(word);
-                if (!word.isEmpty() && !word.isBlank() && !m.find()) {
+                if (!word.isEmpty() && !word.isBlank()) {
                     for (Character c : word.toLowerCase().toCharArray()) {
                         current = c;
                         if (prev == null) {
@@ -69,45 +68,42 @@ public class Classifier {
                                 en_freq++;
                                 en += freq_file_en.get(combination);
                             }
+                            prev = c;
                         }
-                        prev = c;
                     }
                 }
             }
-            if (nl > en && nl_freg > en_freq) {
-                nl_counter++;
-                System.out.println("nl with: "+sentence);
-            } else {
-                if (nl < en && nl_freg < en_freq) {
-                    en_counter++;
-                    System.out.println("en with: " + sentence);
-                }else{
-                    nl = nl * 100;
-                    en = en * 100;
-                    if(Math.abs(nl - en) > Math.abs(nl_freg - en_freq)){
-                        if(nl > en ){
-                            nl_counter++;
-                            System.out.println("nl with: " + sentence);
-                        }else{
-                            en_counter++;
-                            System.out.println("en with: " + sentence);
-                        }
-                    }else{
-                        if(nl_freg > en_freq ){
-                            nl_counter++;
-                            System.out.println("nl with: " + sentence);
-                        }
-                        else{
-                            en_counter++;
-                            System.out.println("en with: " + sentence);
+                if (nl > en && nl_freg > en_freq) {
+                    nl_counter++;
+                    System.out.println("NL: " + sentence + " nl: " + nl + " " + nl_freg + " en: " + en + " " + en_freq);
+                } else {
+                    if (nl < en && nl_freg < en_freq) {
+                        en_counter++;
+                        System.out.println("EN: " + sentence + " nl: " + nl + " " + nl_freg + " en: " + en + " " + en_freq);
+                    } else {
+                        nl = nl * 100;
+                        en = en * 100;
+                        if (Math.abs(nl - en) > Math.abs(nl_freg - en_freq)) {
+                            if (nl > en) {
+                                nl_counter++;
+                                System.out.println("NL: " + sentence + " nl: " + nl + " " + nl_freg + " en: " + en + " " + en_freq);
+                            } else {
+                                en_counter++;
+                                System.out.println("EN: " + sentence + " nl: " + nl + " " + nl_freg + " en: " + en + " " + en_freq);
+                            }
+                        } else {
+                            if (nl_freg > en_freq) {
+                                nl_counter++;
+                                System.out.println("NL: " + sentence + " nl: " + nl + " " + nl_freg + " en: " + en + " " + en_freq);
+                            } else {
+                                en_counter++;
+                                System.out.println("EN: " + sentence + " nl: " + nl + " " + nl_freg + " en: " + en + " " + en_freq);
+                            }
                         }
                     }
-
                 }
-            }
             regels++;
         }
-
         System.out.println("regels: " + regels + ". en counter: " + en_counter + ". nl counter: " + nl_counter);
         return "lang";
     }
@@ -125,13 +121,13 @@ public class Classifier {
                 return (o1.getValue()).compareTo(o2.getValue());
             }
         });
-        Float sum = (float)0;
+        Float sum = (float) 0;
         HashMap<String, Float> temp = new LinkedHashMap<String, Float>();
         for (Map.Entry<String, Integer> aa : list) {
             Float freq = ((float) aa.getValue()) / ((float) combination_counter);
             sum += freq;
         }
-        Float avg = sum/list.size();
+        Float avg = sum / list.size();
         for (Map.Entry<String, Integer> aa : list) {
             Float freq = ((float) aa.getValue()) / ((float) combination_counter);
             sum += freq;
@@ -146,30 +142,28 @@ public class Classifier {
         Integer combination_counter = 0;
         Map<String, Integer> frequence = new HashMap<String, Integer>();
         for (String sentence : text) {
-            sentence = sentence.replaceAll("[^a-zA-Z ]", "");
+            sentence = sentence.replaceAll("[^-a-zA-Z ’]", "");
             String[] words = sentence.split(" ");
             for (String word : words) {
                 Character prev = null;
+                word = " "+word+" ";
                 Character current;
                 String combination;
-                Pattern p = Pattern.compile("[^A-Za-z]");
-                Matcher m = p.matcher(word);
                 Set<String> combinations = new HashSet<String>();
-                ;
-                if (!word.isEmpty() && !word.isBlank() && !m.find()) {
+                if (!word.isEmpty() && !word.isBlank()) {
                     for (Character c : word.toLowerCase().toCharArray()) {
                         current = c;
                         if (prev == null) {
                             prev = c;
                             continue;
                         } else {
+                            combination_counter++;
                             combination = prev.toString() + current.toString();
                             combinations.add(combination);
                         }
                         prev = c;
                     }
                     for (String combi : combinations) {
-                        combination_counter++;
                         if (frequence.containsKey(combi)) {
                             frequence.put(combi, (frequence.get(combi) + 1));
                         } else {
@@ -213,7 +207,7 @@ public class Classifier {
 
     private void write(Map<String, Float> data, String language) {
         String path = "src/results/" + language + ".txt";
-        Integer occur = 1;
+        Integer occur = 0;
         try {
             File myObj = new File(path);
             List<Map.Entry<String, Float>> list = new LinkedList<Map.Entry<String, Float>>(data.entrySet());
